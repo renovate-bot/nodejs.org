@@ -1,36 +1,35 @@
 ---
-title: Dockerizing a Node.js web app
+title: Докеризация веб-приложения Node.js
 layout: docs.hbs
 ---
 
-# Dockerizing a Node.js web app
+# Докеризация веб-приложения Node.js
 
-The goal of this example is to show you how to get a Node.js application into a
-Docker container. The guide is intended for development, and *not* for a
-production deployment. The guide also assumes you have a working [Docker
-installation](https://docs.docker.com/engine/installation/) and a basic
-understanding of how a Node.js application is structured.
+Цель этого примера — показать, как поместить приложение Node.js в Docker-контейнер.
+Это руководство предназначено для разработки, но не для прямого использования в
+продакшене. Мы также предполагаем, что вы успешно [установили Docker](https://docs.docker.com/install/) на свой ПК и
+имеете базовое представление о структуре Node.js приложения.
 
-In the first part of this guide we will create a simple web application in
-Node.js, then we will build a Docker image for that application, and lastly we
-will run the image as a container.
+В первой части руководства мы создадим простое Node.js приложение, затем 
+мы сделаем для него docker-образ, и, наконец, инициализируем экземпляр контейнера
+из этого образа.
 
-Docker allows you to package an application with all of its dependencies into a
-standardized unit, called a container, for software development. A container is
-a stripped-to-basics version of a Linux operating system. An image is software
-you load into a container.
+Docker позволяет вам упаковать приложение вместе с его окружением и всеми зависимостями в
+"коробку", называемую контейнером. Обычно контейнер состоит из приложения, работающего в
+упрощенной версии ОС Linux. Образ — это шаблон для контейнера, контейнер — это работающий
+экземпляр образа.
 
-## Create the Node.js app
+## Создание приложения Node.js
 
-First, create a new directory where all the files would live. In this directory
-create a `package.json` file that describes your app and its dependencies:
+Для начала создадим новую директорию, в которой будут находиться все файлы приложения. В этой директории
+создайте файл `package.json`, в котором описано приложение и его зависимости:
 
 ```json
 {
   "name": "docker_web_app",
   "version": "1.0.0",
-  "description": "Node.js on Docker",
-  "author": "First Last <first.last@example.com>",
+  "description": "node.js on docker",
+  "author": "first last <first.last@example.com>",
   "main": "server.js",
   "scripts": {
     "start": "node server.js"
@@ -41,235 +40,239 @@ create a `package.json` file that describes your app and its dependencies:
 }
 ```
 
-With your new `package.json` file, run `npm install`. If you are using `npm`
-version 5 or later, this will generate a `package-lock.json` file which will be copied
-to your Docker image.
+После создания файла `package.json`, выполните команду `npm install`. Если вы используете `npm`
+версии 5 или выше, это также создаст файл `package-lock.json`, который будет скопирован в ваш docker-образ.
 
-Then, create a `server.js` file that defines a web app using the
-[Express.js](https://expressjs.com/) framework:
+Далее создайте файл `server.js`, который определяет веб-приложение на основе
+фреймворка [Express.js](https://expressjs.com/):
 
 ```javascript
 'use strict';
 
 const express = require('express');
 
-// Constants
-const PORT = 8080;
-const HOST = '0.0.0.0';
+// константы
+const port = 8080;
+const host = '0.0.0.0';
 
-// App
+// приложение
 const app = express();
 app.get('/', (req, res) => {
-  res.send('Hello world\n');
+  res.send('Hello World');
 });
 
-app.listen(PORT, HOST);
-console.log(`Running on http://${HOST}:${PORT}`);
+app.listen(port, host);
+console.log(`running on http://${host}:${port}`);
 ```
 
-In the next steps, we'll look at how you can run this app inside a Docker
-container using the official Docker image. First, you'll need to build a Docker
-image of your app.
+Далее мы рассмотрим, как можно запускать это приложение внутри Docker-контейнера,
+используя официальный образ Docker'а. Сначала давайте создадим Docker-образ с нашим приложением.
 
-## Creating a Dockerfile
+## Создание файла Dockerfile
 
-Create an empty file called `Dockerfile`:
+Создайте пустой файл с именем `Dockerfile`:
 
 ```markup
 touch Dockerfile
 ```
 
-Open the `Dockerfile` in your favorite text editor
+Откройте этот файл в вашем любимом текстовом редакторе.
 
-The first thing we need to do is define from what image we want to build from.
-Here we will use the latest LTS (long term support) version `10` of `node`
-available from the [Docker Hub](https://hub.docker.com/):
+Первое, что нам надо сделать — определить базовый образ,
+который будет взят за основу. Мы будем использовать образ `node` последней версии
+LTS* (версии с долгосрочной поддержкой) — `12`,
+доступный на [Docker Hub](https://hub.docker.com/).
+
+\* Прим. переводчика: на момент написания статьи.
 
 ```docker
-FROM node:10
+FROM node:12
 ```
 
-Next we create a directory to hold the application code inside the image, this
-will be the working directory for your application:
+Затем создадим директорию для кода приложения внутри образа.
+Это будет рабочая папка для вашего приложения.
 
 ```docker
-# Create app directory
+# создание директории приложения
 WORKDIR /usr/src/app
 ```
 
-This image comes with Node.js and NPM already installed so the next thing we
-need to do is to install your app dependencies using the `npm` binary. Please
-note that if you are using `npm` version 4 or earlier a `package-lock.json`
-file will *not* be generated.
+Образ, который мы используем, поставляется с уже предустановленным Node.js и NPM.
+Поэтому мы можем просто установить зависимости приложения с помощью команд `npm`. 
+Обратите внимание, если вы используете `npm` 4 или ниже, файл `package-lock.json`
+не будет сгенерирован.
 
 ```docker
-# Install app dependencies
-# A wildcard is used to ensure both package.json AND package-lock.json are copied
-# where available (npm@5+)
+# установка зависимостей
+# символ астериск ("*") используется для того чтобы по возможности 
+# скопировать оба файла: package.json и package-lock.json
 COPY package*.json ./
 
 RUN npm install
-# If you are building your code for production
+# Если вы создаете сборку для продакшн
 # RUN npm ci --only=production
 ```
 
-Note that, rather than copying the entire working directory, we are only copying
-the `package.json` file. This allows us to take advantage of cached Docker
-layers. bitJudo has a good explanation of this
-[here](http://bitjudo.com/blog/2014/03/13/building-efficient-dockerfiles-node-dot-js/). 
-Furthermore, the `npm ci` command, specified in the comments, helps provide faster, reliable, reproducible builds for production environments. 
-You can read more about this [here](https://blog.npmjs.org/post/171556855892/introducing-npm-ci-for-faster-more-reliable). 
+Обратите внимание, что вместо того, чтобы копировать весь рабочий каталог, 
+мы копируем только файл `package.json`. Это позволяет воспользоваться 
+кэшированием слоев в Docker. [Здесь](http://bitjudo.com/blog/2014/03/13/building-efficient-dockerfiles-node-dot-js/) 
+bitJudo дал хорошее объяснение того, как это работает. Более того,
+команда `npm ci`, указанная в комментарии, позволяет создавать
+более быстрые, надежные, воспроизводимые сборки для продакшена.
+вы можете прочесть больше об этой команде [здесь](https://blog.npmjs.org/post/171556855892/introducing-npm-ci-for-faster-more-reliable).
 
-To bundle your app's source code inside the Docker image, use the `COPY`
-instruction:
+Чтобы отправить исходный код вашего приложения внутрь Docker-образа, 
+используйте директиву `COPY`.
 
 ```docker
-# Bundle app source
+# копируем исходный код
 COPY . .
 ```
 
-Your app binds to port `8080` so you'll use the `EXPOSE` instruction to have it
-mapped by the `docker` daemon:
+Сервер привязан к `8080` порту, поэтому мы будем использовать 
+инструкцию `EXPOSE`, чтобы проинформировать Docker о том, что в контейнере
+имеется приложение, прослушивающее этот порт.
 
 ```docker
 EXPOSE 8080
 ```
 
-Last but not least, define the command to run your app using `CMD` which defines
-your runtime. Here we will use `node server.js` to start your server:
+Последняя, но не менее важная команда `CMD` содержит все необходимые
+переменные среды и инструкции для запуска приложения.
+Здесь мы просто используем `node server.js` для запуска.
 
 ```docker
 CMD [ "node", "server.js" ]
 ```
 
-Your `Dockerfile` should now look like this:
+Ваш `Dockerfile` теперь должен выглядеть примерно так:
 
 ```docker
-FROM node:10
+FROM node:12
 
-# Create app directory
+# создание директории приложения
 WORKDIR /usr/src/app
 
-# Install app dependencies
-# A wildcard is used to ensure both package.json AND package-lock.json are copied
-# where available (npm@5+)
+# установка зависимостей
+# символ астериск ("*") используется для того чтобы по возможности 
+# скопировать оба файла: package.json и package-lock.json
 COPY package*.json ./
 
 RUN npm install
-# If you are building your code for production
+# Если вы создаете сборку для продакшн
 # RUN npm ci --only=production
 
-# Bundle app source
+# копируем исходный код
 COPY . .
 
 EXPOSE 8080
 CMD [ "node", "server.js" ]
 ```
 
-## .dockerignore file
+## Файл .dockerignore
 
-Create a `.dockerignore` file in the same directory as your `Dockerfile`
-with following content:
+Создайте файл `.dockerignore` в той же директории, что и `Dockerfile`,
+со следующим содержимым:
 
 ```
 node_modules
 npm-debug.log
 ```
 
-This will prevent your local modules and debug logs from being copied onto your
-Docker image and possibly overwriting modules installed within your image.
+Это предотвратит копирование локально установленных модулей и дебаг-логов 
+в Docker-образ и возможную перезапись модулей установленных внутри образа.
 
-## Building your image
+## Сборка образа
 
-Go to the directory that has your `Dockerfile` and run the following command to
-build the Docker image. The `-t` flag lets you tag your image so it's easier to
-find later using the `docker images` command:
+Перейдите в директорию, в которой находится ваш `Dockerfile` и запустите
+следующую команду, чтобы собрать Docker-образ. Флаг `-t` позволяет поставить 
+тэг к вашему образу, чтобы его позже было проще найти при помощи команды
+`docker images`:
 
 ```bash
-$ docker build -t <your username>/node-web-app .
+docker build -t <your username>/node-web-app .
 ```
 
-Your image will now be listed by Docker:
+Созданный образ теперь будет отображаться в списке всех образов:
 
 ```bash
 $ docker images
 
-# Example
-REPOSITORY                      TAG        ID              CREATED
-node                            8          1934b0b038d1    5 days ago
+# пример вывода
+repository                      tag        id              created
+node                            12         1934b0b038d1    5 days ago
 <your username>/node-web-app    latest     d64d3505b0d2    1 minute ago
 ```
 
-## Run the image
+## Запуск образа
 
-Running your image with `-d` runs the container in detached mode, leaving the
-container running in the background. The `-p` flag redirects a public port to a
-private port inside the container. Run the image you previously built:
+Запуск образа с флагом `-d` позволяет контейнеру работать в фоновом режиме. 
+Флаг `-p` перенаправляет публичный порт на приватный порт внутри контейнера.
+Запустите образ, который вы ранее создали:
 
 ```bash
-$ docker run -p 49160:8080 -d <your username>/node-web-app
+docker run -p 49160:8080 -d <your username>/node-web-app
 ```
 
-Print the output of your app:
+Отобразите логи вашего приложения:
 
 ```bash
-# Get container ID
+# отобразить все контейнеры, чтобы получить id нужного нам
 $ docker ps
 
-# Print app output
-$ docker logs <container id>
+# отобразить логи
+$ docker logs <container_id>
 
-# Example
-Running on http://localhost:8080
+# пример логов
+running on http://localhost:8080
 ```
 
-If you need to go inside the container you can use the `exec` command:
+Если вам нужно попасть внутрь контейнера, используйте команду `exec`:
 
 ```bash
-# Enter the container
+# войти в контейнер в интерактивном режиме
 $ docker exec -it <container id> /bin/bash
 ```
 
-## Test
+## Проверка
 
-To test your app, get the port of your app that Docker mapped:
+Чтобы проверить ваше приложение, используйте публичный порт, к которому привязан контейнер:
 
 ```bash
 $ docker ps
 
-# Example
-ID            IMAGE                                COMMAND    ...   PORTS
+# пример вывода
+id            image                                command    ...   ports
 ecce33b30ebf  <your username>/node-web-app:latest  npm start  ...   49160->8080
 ```
 
-In the example above, Docker mapped the `8080` port inside of the container to
-the port `49160` on your machine.
+В примере выше docker связал порт `8080` внутри контейнера с портом `49160`
+на вашем компьютере.
 
-Now you can call your app using `curl` (install if needed via: `sudo apt-get
-install curl`):
+Вы можете сделать запрос к вашему приложению с помощью утилиты `curl`
+(установите ее, если требуется с помощью команды: `sudo apt-get install curl`):
 
 ```bash
 $ curl -i localhost:49160
 
-HTTP/1.1 200 OK
-X-Powered-By: Express
-Content-Type: text/html; charset=utf-8
-Content-Length: 12
-ETag: W/"c-M6tWOb/Y57lesdjQuHeB1P/qTV0"
-Date: Mon, 13 Nov 2017 20:53:59 GMT
-Connection: keep-alive
+http/1.1 200 ok
+x-powered-by: express
+content-type: text/html; charset=utf-8
+content-length: 12
+etag: w/"c-m6twob/y57lesdjquheb1p/qtv0"
+date: mon, 13 nov 2017 20:53:59 gmt
+connection: keep-alive
 
-Hello world
+hello world
 ```
 
-We hope this tutorial helped you get up and running a simple Node.js application
-on Docker.
+Надеемся, что эта инструкция помогла вам настроить и запустить простое приложение
+Node.js с помощью Docker.
 
-You can find more information about Docker and Node.js on Docker in the
-following places:
+Вы можете найти больше информации о Docker и Node.js в docker по следующим ссылкам:
 
-* [Official Node.js Docker Image](https://hub.docker.com/_/node/)
-* [Node.js Docker Best Practices Guide](https://github.com/nodejs/docker-node/blob/master/docs/BestPractices.md)
-* [Official Docker documentation](https://docs.docker.com/)
-* [Docker Tag on Stack Overflow](https://stackoverflow.com/questions/tagged/docker)
-* [Docker Subreddit](https://reddit.com/r/docker)
+* [Официальный docker-образ Node.js](https://hub.docker.com/_/node/)
+* [Руководство по лучшим практикам Node.js в Docker](https://github.com/nodejs/docker-node/blob/master/docs/BestPractices.md)
+* [Официальная документация Docker](https://docs.docker.com/)
+* [Тэг Docker на stack overflow](https://stackoverflow.com/questions/tagged/docker)
+* [Канал Docker на reddit](https://reddit.com/r/docker)
