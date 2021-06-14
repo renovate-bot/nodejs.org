@@ -12,6 +12,7 @@ downloads:
     intro: >
         Загрузите исходный код Node.js или готовый установщик для вашей платформы и начните разработку уже сегодня.
     currentVersion: Последняя текущая версия
+    includes: Содержит
     buildInstructions: Сборка Node.js из исходного кода на поддерживаемых платформах
     WindowsInstaller: Установщик Windows
     WindowsBinary: Исходный код для Windows
@@ -28,7 +29,7 @@ additional:
     SmartOSBinaries: Исходный код для SmartOS
     DockerImage: Образ Docker
     officialDockerImage: Официальный Docker-образ Node.js
-    LinuxPowerSystems: Linux на Power Systems
+    LinuxPowerSystems: Linux на Power LE Systems
     LinuxSystemZ: Linux на System z
     AIXPowerSystems: AIX на Power Systems
 ---
