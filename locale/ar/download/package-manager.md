@@ -1,13 +1,13 @@
 ---
 layout: page.hbs
-title: Installing Node.js via package manager
+title: تثبيت Node.js عن طريق مدير الحزم
 ---
 
 # تثبيت النود جي اس عبر مدير حزم
 
-***ملاحظة*** إن صيانة و دعم الحزم المذكورة في هذه الصفحة تتم عبر المشرفين على مديري الحزم، و **ليس** فريق النود جي اس الأساسي. تفضل بإبلاغ أية مشكلة إلى المشرفين على الحزم و إذا كانت مشكلتك عبارة عن خطأ في النود جي اس بحد ذاتها فسيبلغ المشرف عن هذه المشكلة صعودا.  
+***ملاحظة*** إن صيانة و دعم الحزم المذكورة في هذه الصفحة تتم عبر المشرفين على مديري الحزم، و **ليس** فريق النود جي اس الأساسي. تفضل بإبلاغ أية مشكلة إلى المشرفين على الحزم و إذا كانت مشكلتك عبارة عن خطأ في النود جي اس بحد ذاتها فسيبلغ المشرف عن هذه المشكلة صعودا.
 
-----------------------------
+---
 
 * [آندرويد](#android)
 * [Arch Linux](#arch-linux)
@@ -25,7 +25,7 @@ title: Installing Node.js via package manager
 * [Void Linux](#void-linux)
 * [ويندوز](#windows)
 
-----------------------------
+---
 
 ## <!--android-->آندرويد
 
@@ -37,6 +37,7 @@ title: Installing Node.js via package manager
 ```bash
 pkg install nodejs
 ```
+
 حاليا، النسخ الثنائية الخاصة بـ Termux و هي مربوطة بـ `system-icu` (تعتمد على حزمة `libicu`).
 
 ## Arch Linux
@@ -53,7 +54,7 @@ pacman -S nodejs npm
 
 ## FreeBSD
 
-آخر إصدارات النود جي اس متوفرة عبر [www/node](http://freshports.org/www/node)
+آخر إصدارات النود جي اس متوفرة عبر [www/node](https://www.freshports.org/www/node)
 
 يمكنك تثبيت حزمة ثنائية عبر [pkg](https://www.freebsd.org/cgi/man.cgi?pkg):
 
@@ -77,7 +78,7 @@ emerge nodejs
 
 ## IBM i
 
-نسخ LTS لـNode.js متوفرة من IBM و متوفرة عبر [مدير الحزمة الـ'yum'](http://ibm.biz/ibmi-rpms). إسم الحزمة هو `nodejs` متبوعا برقم الإصدار الرائد (مثلا، `nodejs8`، `nodejs10`، `nodejs12`، إلخ
+نسخ LTS لـNode.js متوفرة من IBM و متوفرة عبر [مدير الحزمة الـ'yum'](https://ibm.biz/ibmi-rpms). إسم الحزمة هو `nodejs` متبوعا برقم الإصدار الرائد (مثلا، `nodejs8`، `nodejs10`، `nodejs12`، إلخ
 
 لتثبيت Node.js 12.x باستخدام سطر الأوامر، شغل الامر التالي كمستخدم مع سلطة *ALLOBJ الخاصة :
 
@@ -104,25 +105,25 @@ pkgin -y install nodejs
 ## nvm
 
 مدير نسخ النود هو عبارة عن سكريبت خاص بالباش يستخدم لإدارة عدة نسخ من النود جي اس، حيث يسمح لك بالقيام بعمليات مختلفة كتثبيت و إلغاء تثبيت و تبديل نسخة معينة و اكثر من ذلك.
-لتثبيت مدير نسخ النود استعمل [سكريبت التثبيت](https://github.com/creationix/nvm#install-script).
+لتثبيت مدير نسخ النود استعمل [سكريبت التثبيت](https://github.com/nvm-sh/nvm#install--update-script).
 
 على انظمة يونيكس و OS X، يمكن تثبيت نسخة من النود جي اس تم بنائها من المصدر عبر [مدير نسخ النود (nvm)](https://github.com/creationix/nvm) عبر تثبيتها في المسار الذي يتوقعه مدير نسخ النود:
 
 ```bash
-$ env VERSION=`python tools/getnodeversion.py` make install DESTDIR=`nvm_version_path v$VERSION` PREFIX=""
+env VERSION=`python tools/getnodeversion.py` make install DESTDIR=`nvm_version_path v$VERSION` PREFIX=""
 ```
 
 بعد قيامك بهذه الخطوة، يمكنك استعمال مدير نسخ النود للتبديل بين النسخ المحررة و النسخ المبنية من المصدر.
 على سبيل المثال ، اذا كانت نسخة النود جي اس الحالية هي <span dir="ltr">v8.0.0-pre</span>:
 
 ```bash
-$ nvm use 8
+nvm use 8
 ```
 
 حالما يتم إطلاق نسخة رسمية، قم بإلغاء تثبيت النسخة المبنية من المصدر:
 
 ```bash
-$ nvm uninstall 8
+nvm uninstall 8
 ```
 
 ## OpenBSD
@@ -133,7 +134,7 @@ $ nvm uninstall 8
 /usr/ports/lang/node
 ```
 
-باستعمال [pkg_add](http://man.openbsd.org/OpenBSD-current/man1/pkg_add.1) على OpenBSD:
+باستعمال [pkg_add](https://man.openbsd.org/OpenBSD-current/man1/pkg_add.1) على OpenBSD:
 
 ```bash
 pkg_add node
@@ -157,7 +158,7 @@ zypper install nodejs4
 
 ## macOS
 
-بكل بساطة، قم بتنزيل [مثبت الماك او اس](https://nodejs.org/#download) مباشرة من موقع [nodejs.org](https://nodejs.org).
+بكل بساطة، قم بتنزيل [مثبت الماك او اس](https://nodejs.org/ar/#home-downloadhead) مباشرة من موقع [nodejs.org](https://nodejs.org/).
 
 _إذا كنت تريد تنزيل الحزمة باستعمال الباش:_
 
@@ -167,18 +168,18 @@ curl "https://nodejs.org/dist/latest/node-${VERSION:-$(wget -qO- https://nodejs.
 
 ### البدائل
 
-باستعمال **[Homebrew](http://brew.sh/)**:
+باستعمال **[Homebrew](https://brew.sh/)**:
 
 ```bash
 brew install node
 ```
 
-باستعمال **[MacPorts](http://www.macports.org/)**:
+باستعمال **[MacPorts](https://www.macports.org/)**:
 
 ```bash
 port install nodejs<major version>
 
-# Example
+# على سبيل المثال
 port install nodejs7
 ```
 
@@ -190,7 +191,7 @@ port install nodejs7
 pkgin -y install nodejs
 ```
 
- من أو قم ببنائها يدويا من pkgsrc:
+من أو قم ببنائها يدويا من pkgsrc:
 
 ```bash
 cd pkgsrc/lang/nodejs && bmake install
@@ -210,7 +211,6 @@ pkgin -y install nodejs
 cd pkgsrc/lang/nodejs && bmake install
 ```
 
-
 ## Solus
 
 توفر Solus النود جي اس في مستودعها الرئيسي.
@@ -218,7 +218,6 @@ cd pkgsrc/lang/nodejs && bmake install
 ```bash
 sudo eopkg install nodejs
 ```
-
 
 ## Void Linux
 
@@ -230,19 +229,19 @@ xbps-install -Sy nodejs
 
 ## <!--windows-->ويندوز
 
-قم بتحميل [المثبت الخاص بويندوز](https://nodejs.org/#download) مباشرة من موقع [nodejs.org](https://nodejs.org).
+قم بتحميل [المثبت الخاص بويندوز](https://nodejs.org/ar/#home-downloadhead) مباشرة من موقع [nodejs.org](https://nodejs.org/).
 
 ### البدائل
 
-باستعمال **[Chocolatey](http://chocolatey.org)**:
+باستعمال **[Chocolatey](https://chocolatey.org/)**:
 
 ```bash
 cinst nodejs
-# or for full install with npm
+# أو للتثبيت الكامل بواسطة npm
 cinst nodejs.install
 ```
 
-باستعمال **[Scoop](http://scoop.sh/)**:
+باستعمال **[Scoop](https://scoop.sh/)**:
 
 ```bash
 scoop install nodejs
