@@ -48,7 +48,7 @@ order of operations.
    └───────────────────────────┘
 ```
 
-*note: each box will be referred to as a "phase" of the event loop.*
+> Each box will be referred to as a "phase" of the event loop.
 
 Each phase has a FIFO queue of callbacks to execute. While each phase is
 special in its own way, generally, when the event loop enters a given
@@ -65,12 +65,11 @@ result, long running callbacks can allow the poll phase to run much
 longer than a timer's threshold. See the [**timers**](#timers) and
 [**poll**](#poll) sections for more details.
 
-_**NOTE:** There is a slight discrepancy between the Windows and the
-Unix/Linux implementation, but that's not important for this
-demonstration. The most important parts are here. There are actually
-seven or eight steps, but the ones we care about — ones that Node.js
-actually uses - are those above._
-
+> There is a slight discrepancy between the Windows and the
+> Unix/Linux implementation, but that's not important for this
+> demonstration. The most important parts are here. There are actually
+> seven or eight steps, but the ones we care about — ones that Node.js
+> actually uses - are those above.
 
 ## Phases Overview
 
@@ -100,8 +99,7 @@ scheduled after the specified amount of time has passed; however,
 Operating System scheduling or the running of other callbacks may delay
 them.
 
-_**Note**: Technically, the [**poll** phase](#poll) controls when timers
-are executed._
+> Technically, the [**poll** phase](#poll) controls when timers are executed.
 
 For example, say you schedule a timeout to execute after a 100 ms
 threshold, then your script starts asynchronously reading a file which
@@ -122,7 +120,6 @@ setTimeout(() => {
 
   console.log(`${delay}ms have passed since I was scheduled`);
 }, 100);
-
 
 // do someAsyncOperation which takes 95 ms to complete
 someAsyncOperation(() => {
@@ -147,11 +144,11 @@ the timer's callback. In this example, you will see that the total delay
 between the timer being scheduled and its callback being executed will
 be 105ms.
 
-Note: To prevent the **poll** phase from starving the event loop, [libuv][]
-(the C library that implements the Node.js
-event loop and all of the asynchronous behaviors of the platform)
-also has a hard maximum (system dependent) before it stops polling for
-more events.
+> To prevent the **poll** phase from starving the event loop, [libuv][]
+> (the C library that implements the Node.js
+> event loop and all of the asynchronous behaviors of the platform)
+> also has a hard maximum (system dependent) before it stops polling for
+> more events.
 
 ### pending callbacks
 
@@ -176,7 +173,7 @@ either the queue has been exhausted, or the system-dependent hard limit
 is reached.
 
 * _If the **poll** queue **is empty**_, one of two more things will
-happen:
+  happen:
   * If scripts have been scheduled by `setImmediate()`, the event loop
   will end the **poll** phase and continue to the **check** phase to
   execute those scheduled scripts.
@@ -232,7 +229,6 @@ For example, if we run the following script which is not within an I/O
 cycle (i.e. the main module), the order in which the two timers are
 executed is non-deterministic, as it is bound by the performance of the
 process:
-
 
 ```js
 // timeout_vs_immediate.js
@@ -294,7 +290,7 @@ You may have noticed that `process.nextTick()` was not displayed in the
 diagram, even though it's a part of the asynchronous API. This is because
 `process.nextTick()` is not technically part of the event loop. Instead,
 the `nextTickQueue` will be processed after the current operation is
-completed, regardless of the current phase of the event loop. Here, 
+completed, regardless of the current phase of the event loop. Here,
 an *operation* is defined as a transition from the
 underlying C/C++ handler, and handling the JavaScript that needs to be
 executed.
@@ -346,7 +342,7 @@ function someAsyncApiCall(callback) { callback(); }
 
 // the callback is called before `someAsyncApiCall` completes.
 someAsyncApiCall(() => {
-  // since someAsyncApiCall has completed, bar hasn't been assigned any value
+  // since someAsyncApiCall hasn't completed, bar hasn't been assigned any value
   console.log('bar', bar); // undefined
 });
 
@@ -414,9 +410,8 @@ percentage of the packages on npm. Every day more new modules are being
 added, which means every day we wait, more potential breakages occur.
 While they are confusing, the names themselves won't change.
 
-*We recommend developers use `setImmediate()` in all cases because it's
-easier to reason about (and it leads to code that's compatible with a
-wider variety of environments, like browser JS.)*
+> We recommend developers use `setImmediate()` in all cases because it's
+> easier to reason about.
 
 ## Why use `process.nextTick()`?
 
@@ -491,5 +486,5 @@ myEmitter.on('event', () => {
 });
 ```
 
-[libuv]: http://libuv.org
+[libuv]: https://libuv.org/
 [REPL]: https://nodejs.org/api/repl.html#repl_repl

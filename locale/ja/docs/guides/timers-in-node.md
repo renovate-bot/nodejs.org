@@ -3,7 +3,7 @@ title: Node.js のタイマー
 layout: docs.hbs
 ---
 
-<!-- 
+<!--
 # Timers in Node.js and beyond
 
 The Timers module in Node.js contains functions that execute code after a set
@@ -13,7 +13,7 @@ To fully understand when timer functions will be executed, it's a good idea to
 read up on the Node.js
 [Event Loop](/en/docs/guides/event-loop-timers-and-nexttick/).
 
- -->
+-->
 # Node.js のタイマーと仕組み
 
 Node.js のタイマーモジュールには、
@@ -23,7 +23,7 @@ Node.js のタイマーモジュールには、
 タイマー関数がいつ実行されるかを完全に理解するためには、
 Node.js の[イベントループ](/ja/docs/guides/event-loop-timers-and-nexttick/)を読むことをお勧めします。
 
-<!-- 
+<!--
 ## Controlling the Time Continuum with Node.js
 
 The Node.js API provides several ways of scheduling code to execute at
@@ -33,7 +33,7 @@ its own implementation of these methods. Timers integrate very closely
 with the system, and despite the fact that the API mirrors the browser
 API, there are some differences in implementation.
 
- -->
+-->
 ## Node.js を使って連続した時間を制御する
 
 Node.js APIには、現時点以降のある時点でコードを実行するように
@@ -43,7 +43,7 @@ Node.js は実際にはこれらのメソッドの独自の実装を提供しま
 タイマーはシステムと非常に密接に統合されており、
 API がブラウザ API を反映しているという事実があるにもかかわらず、実装にはいくつかの違いがあります。
 
-<!-- 
+<!--
 ### "When I say so" Execution ~ *`setTimeout()`*
 
 `setTimeout()` can be used to schedule code execution after a designated
@@ -79,7 +79,7 @@ timeout that was set. This returned object can be used to cancel the timeout (
 see `clearTimeout()` below) as well as change the execution behavior (see
 `unref()` below).
 
- -->
+-->
 ### "そう言うとき" 実行する ~ *`setTimeout()`*
 
 `setTimeout()` を使用して、
@@ -115,7 +115,7 @@ setTimeout(myFunc, 1500, 'funky');
 この返されたオブジェクトを使用して、タイムアウトをキャンセル (下記の `clearTimeout()` を参照) し、
 実行動作を変更 (下記の`unref()` を参照) することができます。
 
-<!-- 
+<!--
 ### "Right after this" Execution ~ *`setImmediate()`*
 
 `setImmediate()` will execute code at the end of the current event loop cycle.
@@ -159,7 +159,7 @@ code has been scheduled to execute with `process.nextTick()`, the execution
 cannot be stopped, just like with a normal function. Refer to [this guide](/en/docs/guides/event-loop-timers-and-nexttick/#process-nexttick)
 to better understand the operation of `process.nextTick()`.
 
- -->
+-->
 ### "この直後に" 実行する ~ *`setImmediate()`*
 
 `setImmediate()` は現在のイベントループサイクルの終わりにコードを実行します。
@@ -202,7 +202,7 @@ executing immediate: so immediate
 通常の関数のように実行を停止することはできません。
 `process.nextTick()` の操作をよく理解するために[このガイド](/ja/docs/guides/event-loop-timers-and-nexttick/#process-nexttick)を参照してください。
 
-<!-- 
+<!--
 ### "Infinite Loop" Execution ~ *`setInterval()`*
 
 If there is a block of code that should execute multiple times, `setInterval()`
@@ -227,7 +227,7 @@ milliseconds, or 1.5 seconds, until it is stopped (see below).
 Just like `setTimeout()`, `setInterval()` also returns a `Timeout` object which
 can be used to reference and modify the interval that was set.
 
- -->
+-->
 ### "無限ループ" 実行 ~ *`setInterval()`*
 
 複数回実行する必要があるコードブロックがある場合、
@@ -246,13 +246,14 @@ function intervalFunc() {
 
 setInterval(intervalFunc, 1500);
 ```
+
 上の例では、`intervalFunc()` は停止されるまで
 約 1500 ミリ秒 (1.5秒) ごとに実行されます(下記参照)。
 
 `setTimeout()` と同様に、
 `setInterval()` もまた設定された間隔を参照したり修正したりするのに使用できる `Timeout` オブジェクトを返します。
 
-<!-- 
+<!--
 ## Clearing the Future
 
 What can be done if a `Timeout` or `Immediate` object needs to be cancelled?
@@ -281,7 +282,7 @@ clearImmediate(immediateObj);
 clearInterval(intervalObj);
 ```
 
- -->
+-->
 ## 未来をクリアする
 
 `Timeout` または `Immediate` オブジェクトをキャンセルする必要がある場合はどうすればいいですか？
@@ -310,7 +311,7 @@ clearImmediate(immediateObj);
 clearInterval(intervalObj);
 ```
 
-<!-- 
+<!--
 ## Leaving Timeouts Behind
 
 Remember that `Timeout` objects are returned by `setTimeout` and `setInterval`.
@@ -376,7 +377,8 @@ setImmediate(() => {
   timerObj.ref();
 });
 ```
-<!-- 
+
+<!--
 ## Further Down the Event Loop
 
 There's much more to the Event Loop and Timers than this guide
@@ -385,7 +387,7 @@ Event Loop and how Timers operate during execution, check out
 this Node.js guide: [The Node.js Event Loop, Timers, and
 process.nextTick()](/en/docs/guides/event-loop-timers-and-nexttick/).
 
- -->
+-->
 ## イベントループのさらに下へ
 
 このガイドでカバーしてきた以上に

@@ -18,6 +18,7 @@ const pow = (base, power = 2) => {
 console.log(pow(2)); // 4
 console.log(pow(2,10)); // 1024
 ```
+
 In the above code The function `pow` return square of a number or any other power specified in the function call because the argument `power` is given a default value of 2 so whenever no second argument is provided or the provided value is `undefined` the function `pow` will use 2 as the value of argument `power`. But there is a small gotcha in it:
 
 ```js
@@ -28,13 +29,14 @@ const pow = (base, power = 2) => {
 console.log(pow(2, undefined)); // 4
 console.log(pow(2, null)); // 1
 ```
+
 In JavaScript there are many ways of indicating ["falsy"(false values)](/en/knowledge/javascript-conventions/what-are-truthy-and-falsy-values/) but out of them, only `undefined` will trigger the default parameter. This is the reason why `pow(2, undefined)` returns 4 and `pow(2, null)` returns 1.
 
 JS PRO TIP: In `Math.pow(base, power)` if `power` is 0 or any other "falsy" value (except NaN) the result will always be 1.
 
 Unfortunately, previous versions of JavaScript (ES5 and below) does not support **default parameters** out of the box but over time, however, people have developed idioms to compensate.
 
-The first idiom is giving a default value for the last parameter. This is done by checking if the last parameter is `undefined` and setting it to a default value if it is. Sometimes people use the idiom: `optionalParameter = optionalParameter || defaultValue`. This can have some undesirable behaviour when they pass values that are equal to false such as `false`, `0`, and `""`. So a better way to do this is by explicitly checking that the optional parameter is `undefined`. Here is some code showing the two styles and the differing behaviour:
+The first idiom is giving a default value for the last parameter. This is done by checking if the last parameter is `undefined` and setting it to a default value if it is. Sometimes people use the idiom: `optionalParameter = optionalParameter || defaultValue`. This can have some undesirable behavior when they pass values that are equal to false such as `false`, `0`, and `""`. So a better way to do this is by explicitly checking that the optional parameter is `undefined`. Here is some code showing the two styles and the differing behavior:
 
 ```js
 const example = function (optionalArg) {
@@ -53,7 +55,7 @@ console.log("Without parameter:");
 example();
 betterExample();
 
-console.log("\nWith paramater:");
+console.log("\nWith parameter:");
 example("parameter was passed");
 betterExample("parameter was passed");
 
